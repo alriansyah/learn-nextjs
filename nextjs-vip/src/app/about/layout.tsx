@@ -3,7 +3,7 @@ import Link from "next/link";
 function AboutLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <nav className="fixed right-0 top-10 z-10 h-screen w-60 bg-gray-800">
+      <nav className="fixed right-0 top-10 z-10 h-full w-60 bg-gray-800">
         <ul className="text-white flex flex-col gap-3 p-5">
           <Link href="/">
             <li className="cursor-pointer">Home</li>

@@ -31,10 +31,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
+        {/* <Navbar /> */}
         <main>
-          <div>Layout: {count}</div>
-          <button onClick={handleClick}>Layout Increment</button>
+          {/* <div>Layout: {count}</div>
+          <button onClick={handleClick}>Layout Increment</button> */}
           {children}
         </main>
         <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center"></footer>

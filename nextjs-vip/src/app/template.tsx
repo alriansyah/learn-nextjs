@@ -10,8 +10,8 @@ export default function Template({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="">
-      <h1>Template : {count}</h1>
-      <button onClick={handleClick}>Template Increment</button>
+      {/* <h1>Template : {count}</h1>
+      <button onClick={handleClick}>Template Increment</button> */}
       {children}
     </div>
   );
