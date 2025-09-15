@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
+import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import "./globals.css";
 
@@ -15,12 +16,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const disableNavbarOn = ["/login", "/register"];
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const [count, setCount] = useState(0);
+  const pathname = usePathname();
 
   const handleClick = (): void => {
     setCount((prevCount) => prevCount + 1);
@@ -31,7 +35,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* <Navbar /> */}
+        {!disableNavbarOn.includes(pathname) && <Navbar />}
+
         <main>
           {/* <div>Layout: {count}</div>
           <button onClick={handleClick}>Layout Increment</button> */}
