@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function AdminProductPage() {
+export default function AdminProductsPage() {
   const [status, setStatus] = useState<string>("");
 
   const handleRevalidate = async () => {
@@ -21,10 +21,10 @@ export default function AdminProductPage() {
   };
 
   return (
-    <div>
+    <div className="flex h-96 w-3/6 items-center justify-center rounded-[12px] bg-gray-300">
       <h1>{status}</h1>
       <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-5"
+        className="m-5 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
         onClick={handleRevalidate}
       >
         Revalidate
