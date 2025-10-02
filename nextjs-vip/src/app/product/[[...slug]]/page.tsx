@@ -17,7 +17,7 @@ type Product = {
 
 async function getData() {
   // const res = await fetch("https://fakestoreapi.com/products");
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/productss`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product`, {
     // cache: "force-cache",
     // next: { revalidate: 60 },
     next: { tags: ["products"] },
