@@ -9,7 +9,7 @@ type ProductPageProps = {
 
 type Product = {
   id: number;
-  title: string;
+  name: string;
   price: number;
   description: string;
   category: string;
@@ -38,14 +38,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <Image
               className="h-96 w-full rounded-t-lg object-cover p-8"
               src={product.image}
-              alt={product.title}
+              alt={product.name}
               width={500}
               height={500}
             />
 
             <div className="p-5">
               <h5 className="truncate text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                {product.title}
+                {product.name}
               </h5>
               <div className="flex items-center justify-between">
                 <span className="text-3xl font-bold text-gray-900 dark:text-white">

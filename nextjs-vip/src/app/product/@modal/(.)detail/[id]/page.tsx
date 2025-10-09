@@ -8,25 +8,23 @@ export default async function DetailProductPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const data = await getData(
+  const product = await getData(
     `${process.env.NEXT_PUBLIC_API_URL}/product/?id=${id}`,
   );
-
-  // console.log("params :", params);
 
   return (
     <Modal>
       <Image
         className="col-span-2 aspect-square w-full object-cover"
-        src={data.image}
-        alt={data.title}
+        src={product.image}
+        alt={product.name}
         priority
         width={500}
         height={500}
       />
       <div className="bg-white p-4 px-6">
-        <h3>{data.title}</h3>
-        <p>Price : {data.price}</p>
+        <h3>{product.name}</h3>
+        <p>Price : {product.price}</p>
       </div>
     </Modal>
   );

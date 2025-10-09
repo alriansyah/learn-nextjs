@@ -19,13 +19,13 @@ export default async function DetailProductPage({
         <Image
           className="col-span-2 aspect-square w-full object-cover"
           src={data.image}
-          alt={data.title}
+          alt={data.name}
           priority
           width={500}
           height={500}
         />
         <div className="bg-white p-4 px-6">
-          <h3>{data.title}</h3>
+          <h3>{data.name}</h3>
           <p>Price : {data.price}</p>
         </div>
       </div>
