@@ -1,28 +1,39 @@
 "use client";
 
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React from "react";
 
 export default function LoginPage() {
+  const { push } = useRouter();
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get("email");
-    const password = formData.get("password");
 
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    console.log(data);
+    try {
+      const formData = new FormData(event.currentTarget);
+      const email = formData.get("email");
+      const password = formData.get("password");
+
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: email,
+        password: password,
+        callbackUrl: "/dashboard",
+      });
+
+      if (!res?.error) {
+        push("/dashboard");
+      }
+
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
-    <div className="flex h-screen flex-col justify-center px-6 py-12 lg:px-8 border bg-gray-50">
+    <div className="flex h-screen flex-col justify-center border bg-gray-50 px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
           alt="Your Company"
@@ -94,7 +105,7 @@ export default function LoginPage() {
           Not registered?{" "}
           <Link
             href="/register"
-            className="font-semibold leading-6 text-indigo-500 hover:text-indigo-400"
+            className="leading-6 font-semibold text-indigo-500 hover:text-indigo-400"
           >
             Create an account
           </Link>
