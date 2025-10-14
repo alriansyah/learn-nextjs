@@ -3,10 +3,15 @@
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import type { Session } from "next-auth";
 
 export default function DashboardPage() {
-  const { data: session, status }: { data: any; status: string } = useSession();
+  const { data: session, status }: { data: Session | null; status: string } =
+    useSession();
   const router = useRouter();
+
+  console.log("session", session);
+  console.log("status", status);
 
   useEffect(() => {
     if (status === "unauthenticated") {

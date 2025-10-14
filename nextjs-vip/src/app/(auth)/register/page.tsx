@@ -1,9 +1,60 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
+  const { push } = useRouter();
+  const [error, setError] = useState<{
+    status: boolean;
+    statusCode: number;
+    message: string;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError(null);
+    setIsLoading(true);
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const fullname = formData.get("fullname");
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ fullname, email, password }),
+      });
+
+      const result = await res.json();
+
+      if (res.ok && result.status) {
+        form.reset();
+        setIsLoading(false);
+        push("/login");
+      } else {
+        throw result;
+      }
+    } catch (error) {
+      setError(
+        error as { status: boolean; statusCode: number; message: string },
+      );
+      setIsLoading(false);
+      console.log("Error submitting form:", error);
+    }
+  }
+
   return (
-    <div className="flex h-screen flex-col justify-center px-6 py-12 lg:px-8 border bg-gray-50">
+    <div className="flex h-screen flex-col items-center justify-center border bg-gray-50 px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
           alt="Your Company"
@@ -16,7 +67,13 @@ export default function RegisterPage() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form action="#" method="POST" className="space-y-6">
+        <div className="font-bold text-red-600">{error?.message}</div>
+        <form
+          action="#"
+          method="POST"
+          className="space-y-6"
+          onSubmit={(e) => handleSubmit(e)}
+        >
           <div>
             <label
               htmlFor="fullname"
@@ -79,6 +136,7 @@ export default function RegisterPage() {
           <div>
             <button
               type="submit"
+              disabled={isLoading}
               className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
             >
               Sign up
@@ -90,7 +148,7 @@ export default function RegisterPage() {
           You have an account?{" "}
           <Link
             href="/login"
-            className="font-semibold leading-6 text-indigo-500 hover:text-indigo-400"
+            className="leading-6 font-semibold text-indigo-500 hover:text-indigo-400"
           >
             Sign in here
           </Link>
