@@ -6,10 +6,17 @@ import { useState } from "react";
 import Link from "next/link";
 import React from "react";
 
-export default function LoginPage() {
+export default function LoginPage({
+  searchParams,
+}: {
+  searchParams: { callbackUrl: string };
+}) {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { push } = useRouter();
+
+  const callbackURL = searchParams?.callbackUrl ?? "/dashboard";
+
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
@@ -24,12 +31,12 @@ export default function LoginPage() {
         redirect: false,
         email: email,
         password: password,
-        callbackUrl: "/dashboard",
+        callbackUrl: callbackURL,
       });
 
       if (!res?.error) {
         setIsLoading(false);
-        push("/dashboard");
+        push(callbackURL);
       }
 
       if (!res?.ok && res?.status === 401) {
