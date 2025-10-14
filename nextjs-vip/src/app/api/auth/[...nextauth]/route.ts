@@ -2,9 +2,14 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { JWT } from "next-auth/jwt";
 import type { Session, User } from "next-auth";
+import { login } from "@/lib/firebase/service";
+import bcrypt from "bcrypt";
 
 interface AppUser extends User {
   id: string;
+  fullname: string;
+  email: string;
+  password: string;
   role: "admin" | "user";
 }
 
@@ -27,17 +32,17 @@ const authOptions: NextAuthOptions = {
           password: string;
         };
 
-        const user: AppUser = {
-          id: "1",
-          name: "Al Riansyah",
-          email: "user@domain.com",
-          role: "admin",
-        };
+        const user: AppUser = await login({ email });
+        console.log("user :", user);
 
-        if (email === "user@domain.com" && password === "12345678") {
-          return user;
-        } else {
-          return null;
+        if (user) {
+          const isPasswordValid = await bcrypt.compare(password, user.password);
+
+          if (isPasswordValid) {
+            return user;
+          } else {
+            return null;
+          }
         }
       },
     }),
@@ -48,9 +53,12 @@ const authOptions: NextAuthOptions = {
         const appUser = user as AppUser;
         token.id = appUser.id;
         token.email = appUser.email;
-        token.name = appUser.name;
+        token.fullname = appUser.fullname;
         token.role = appUser.role;
       }
+
+      console.log("token :", token);
+
       return token;
     },
 
@@ -58,7 +66,7 @@ const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
-        session.user.name = token.name as string;
+        session.user.fullname = token.fullname as string;
         session.user.role = token.role as "admin" | "user";
       }
       return session;

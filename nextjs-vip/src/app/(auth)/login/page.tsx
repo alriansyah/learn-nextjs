@@ -2,13 +2,18 @@
 
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import Link from "next/link";
 import React from "react";
 
 export default function LoginPage() {
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { push } = useRouter();
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError(null);
+    setIsLoading(true);
 
     try {
       const formData = new FormData(event.currentTarget);
@@ -23,12 +28,16 @@ export default function LoginPage() {
       });
 
       if (!res?.error) {
+        setIsLoading(false);
         push("/dashboard");
       }
 
-      console.log(res);
+      if (!res?.ok && res?.status === 401) {
+        throw "Email or Password is incorrect";
+      }
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      setError(error as string);
     }
   };
 
@@ -46,6 +55,7 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="font-bold text-red-600">{error}</div>
         <form
           method="POST"
           className="space-y-6"
@@ -93,10 +103,13 @@ export default function LoginPage() {
 
           <div>
             <button
+              disabled={isLoading}
               type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              className={`flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 ${
+                isLoading ? "cursor-not-allowed opacity-70" : ""
+              }`}
             >
-              Sign in
+              {isLoading ? "Loading..." : "Sign in"}
             </button>
           </div>
         </form>
