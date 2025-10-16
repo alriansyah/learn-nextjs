@@ -7,11 +7,19 @@ import {
   query,
   where,
   addDoc,
+  updateDoc,
 } from "firebase/firestore";
 import app from "./init";
 import bcrypt from "bcrypt";
 
 const firestore = getFirestore(app);
+
+interface FirestoreUser {
+  fullname: string;
+  email: string;
+  role: string;
+  type: string;
+}
 
 export async function retrieveData(collectionName: string) {
   const snapshot = await getDocs(collection(firestore, collectionName));
@@ -87,5 +95,34 @@ export async function login(data: { email: string }) {
     return users[0];
   } else {
     return null;
+  }
+}
+
+export async function loginWithGoogle(data: {
+  fullname: string;
+  email: string;
+  role: string;
+  type: string;
+}) {
+  const q = query(
+    collection(firestore, "users"),
+    where("email", "==", data.email),
+  );
+
+  const snapshot = await getDocs(q);
+  const users = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...(doc.data() as FirestoreUser),
+  }));
+
+  if (users.length > 0) {
+    const user = users[0];
+    data.role = user.role ?? "member";
+    await updateDoc(doc(firestore, "users", user.id), data);
+    return { status: true, data };
+  } else {
+    data.role = "member";
+    await addDoc(collection(firestore, "users"), data);
+    return { status: true, data };
   }
 }

@@ -1,21 +1,18 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import React from "react";
 
-export default function LoginPage({
-  searchParams,
-}: {
-  searchParams: { callbackUrl: string };
-}) {
+export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { push } = useRouter();
+  const searchParams = useSearchParams();
 
-  const callbackURL = searchParams?.callbackUrl ?? "/dashboard";
+  const callbackURL = searchParams.get("callbackUrl") ?? "/dashboard";
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -120,7 +117,16 @@ export default function LoginPage({
             </button>
           </div>
         </form>
-
+        <hr className="mt-3 mb-4 border border-black" />
+        <button
+          type="button"
+          className={`flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500`}
+          onClick={() => {
+            signIn("google", { callbackUrl: callbackURL, redirect: false });
+          }}
+        >
+          Sign in with Google
+        </button>
         <p className="mt-10 text-center text-sm/6 text-gray-400">
           Not registered?{" "}
           <Link
