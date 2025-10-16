@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { getData } from "@/services/products";
-import Modal from "@/components/modal";
+import dynamic from "next/dynamic";
+
+const Modal = dynamic(() => import("@/components/modal"));
 
 export default async function DetailProductPage({
   params,
@@ -18,9 +20,9 @@ export default async function DetailProductPage({
         className="col-span-2 aspect-square w-full object-cover"
         src={product.image}
         alt={product.name}
-        priority
         width={500}
         height={500}
+        loading="lazy"
       />
       <div className="bg-white p-4 px-6">
         <h3>{product.name}</h3>

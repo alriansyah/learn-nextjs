@@ -41,6 +41,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               alt={product.name}
               width={500}
               height={500}
+              loading="lazy"
             />
 
             <div className="p-5">

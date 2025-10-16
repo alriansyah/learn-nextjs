@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 import type { Session } from "next-auth";
 
 export default function Navbar() {
@@ -50,7 +51,15 @@ export default function Navbar() {
       </div>
       <div>
         {status === "authenticated" ? (
-          <div className="flex items-center gap-3 text-white">
+          <div className="flex items-center justify-center gap-3 text-white">
+            <Image
+              className="h-10 w-10"
+              src="/images/profile.png"
+              alt="profile"
+              width={100}
+              height={100}
+              loading="lazy"
+            />
             <h4>{session?.user?.fullname}</h4>
             <button
               className="cursor-pointer rounded-lg bg-blue-700 px-3 py-1 text-sm text-white"
